@@ -4,10 +4,10 @@
 -- database state, and that tests don't interfere with each other.
 
 -- First, we must delete (drop) all our tables
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS spaces;
-DROP TABLE IF EXISTS requests;
-DROP TABLE IF EXISTS availability;
+DROP TABLE IF EXISTS users cascade;
+DROP TABLE IF EXISTS spaces cascade;
+DROP TABLE IF EXISTS requests cascade;
+DROP TABLE IF EXISTS space_availability cascade;
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
@@ -20,7 +20,7 @@ CREATE TABLE spaces (
   name varchar(100),
   location varchar(100),
   description text,
-  price float
+  price float,
   user_id int,
   constraint fk_owner_id foreign key(user_id)
     references users(id)
@@ -30,22 +30,24 @@ CREATE TABLE spaces (
 CREATE TABLE requests (
   id SERIAL PRIMARY KEY,
   request_status varchar(100),
-  date date
+  date date,
+  space_id int,
   constraint fk_space_id foreign key(space_id)
     references spaces(id)
-    on delete cascade
+    on delete cascade,
+  booker_id int,
   constraint fk_booker_id foreign key(booker_id)
     references users(id)
     on delete cascade
 );
 
-CREATE TABLE availability (
+CREATE TABLE space_availability (
+  id SERIAL PRIMARY KEY,
   date_1 boolean,
   date_2 boolean,
   date_3 boolean,
   constraint fk_space_id foreign key(space_id)
     references spaces(id)
-    on delete cascade
 );
 
 -- Inserting users
@@ -67,7 +69,7 @@ INSERT INTO requests (request_status, date, space_id, booker_id) VALUES
 ('Pending', '2024-03-06', 3, 1);
 
 -- Inserting availability
-INSERT INTO availability (date_1, date_2, date_3, space_id) VALUES
+INSERT INTO space_availability (date_1, date_2, date_3, space_id) VALUES
 (true, false, true, 1),
 (false, true, true, 2),
 (true, true, false, 3);
