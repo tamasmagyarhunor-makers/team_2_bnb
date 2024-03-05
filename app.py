@@ -127,7 +127,9 @@ def get_requests_by_booker(booker_id):
 #     - SELECT <date> FROM availability WHERE space_id = <space_id>
 #     if available....
 #     - INSERT INTO bookings VALUES <space_id>, <date>, <user_id>, <status = 'pending'>
-#     if accepted...
+
+# Accept a booking request
+
 #     - PATCH availability SET <date> = False WHERE space_id = <space_id>
 #     - PATCH bookings SET <status> = 'accepted' WHERE space_id = <space_id>
 
