@@ -6,33 +6,24 @@ from lib.database_connection import get_flask_database_connection
 # Create a new Flask app
 app = Flask(__name__)
 
-# == Your Routes Here ==
-
-
-# @app.route('/albums', methods=['GET'])
-# def get_albums():
-#     connection = get_flask_database_connection(app)
-#     repository = album_repo(connection)
-#     albums = repository.all()
-#     return render_template('albums/albums.html', album = albums)
-
-
-
-
-
-
-
-
 # GET /index
 # Returns the homepage
 # Try it:
 #   ; open http://localhost:5000/index
-@app.route('/home', methods=['GET'])
+
+# --------- LOGIN -----------
+
+@app.route('/index', methods=['GET'])
 def get_index():
     return render_template('index.html')
 
+@app.route('/login', methods=['GET'])
+def get_login():
+    return render_template('login.html')
 
-# OUR ROUTES HERE
+@app.route('/sign_up', methods=['GET'])
+def get_sign_up():
+    return render_template('sign_up.html')
 
 # -------- SPACES ----------
 
@@ -98,6 +89,15 @@ def get_user(user_id):
 
 # -------- AVAILABILITY ----------
 
+# Get availability of all spaces - GET /availability - SELECT * FROM availability
+
+@app.route('/space/availability', methods=['GET'])
+def get_all_users():
+    connection = get_flask_database_connection(app)
+    repository = space_repo(connection)
+    users = repository.all()
+    return render_template('spaces/spaces.html', user = users)
+
 # Get availability of a single space - GET /availability/<space_id> - SELECT * FROM availability WHERE space_id = <space_id>
 
 @app.route('spaces/availability/<int:space_id>', methods=['GET'])
@@ -109,11 +109,18 @@ def get_space_availability(space_id):
 
 # -------- REQUESTS ----------
 
-# Get booking requests by booker - GET /bookings/<booker_id> - SELECT * FROM bookigns WHERE booker_id = <booker_id>
+# Get booking requests by booker - GET /requests/<booker_id> - SELECT * FROM bookings WHERE booker_id = <booker_id>
 
-# Get booking requests by owner - GET /bookings/<owner_id> - SELECT * FROM bookigns WHERE owner_id = <booker_id>
+@app.route('requests/booker/<int:booker_id>', methods=['GET'])
+def get_requests_by_booker(booker_id):
+    connection = get_flask_database_connection(app)
+    repository = user_repo(connection)
+    booking_requests = repository.find(booker_id)
+    return render_template('booking_requests/booking_request.html', booking_requests=booking_request)
 
-# Get booking requests by space  - GET /bookings/<space_id> - SELECT * FROM spaces WHERE spcae_id = <space_id>
+# Get booking requests by owner - GET /requests/<owner_id> - SELECT * FROM bookigns WHERE owner_id = <booker_id>
+
+# Get booking requests by space  - GET /requests/<space_id> - SELECT * FROM spaces WHERE spcae_id = <space_id>
 
 
 # Create a new booking request

@@ -14,12 +14,7 @@ def test_get_home(page, test_web_address):
     expect(strong_tag).to_have_text("This is the homepage.")
 
 
-
-
-
-
-
-
+#test to list all the spaces
 def test_get_all_space(db_connection, page, test_web_address):
     # We seed our database with the book store seed file
     db_connection.seed("/seeds/database_connection.sql")
@@ -38,12 +33,8 @@ def test_get_all_space(db_connection, page, test_web_address):
     ])
 
 
-
-
-
-
-#test for get all spaces
-def test_get_spaces(db_connection, page, test_web_address):
+#test to get a single space
+def test_get_space(db_connection, page, test_web_address):
     db_connection.seed("/seeds/database_connection.sql")
 
     # We visit the space page
@@ -56,21 +47,68 @@ def test_get_spaces(db_connection, page, test_web_address):
 
     # Then we look for specific test classes that we have put into the HTML
     # as targets for our tests to look for. This one is called `t-title`.
-    # You can see it in `templates/space/show.html`
-    title_element = page.locator(".t-name")
-    expect(title_element).to_have_text("name: Cozy Studio Apartment")
+    # You can see it in `templates/space/listing.html`     <---- this needs to be created, if you create this make sure you delete this line
+    name_element = page.locator(".t-name")
+    expect(name_element).to_have_text("name: Cozy Studio Apartment")
 
-    author_element = page.locator(".t-location")
-    expect(author_element).to_have_text("location: New York")
+    location_element = page.locator(".t-location")
+    expect(location_element).to_have_text("location: New York")
     
-    author_element = page.locator(".t-description")
-    expect(author_element).to_have_text("description: A small but comfortable studio in downtown.")
+    description_element = page.locator(".t-description")
+    expect(description_element).to_have_text("description: A small but comfortable studio in downtown.")
 
-    author_element = page.locator(".t-price")
-    expect(author_element).to_have_text("price: 100.00")
+    price_element = page.locator(".t-price")
+    expect(price_element).to_have_text("price: 100.00")
+
+    user_id_element = page.locator(".t-user_id")
+    expect(user_id_element).to_have_text("user_id: 1")
 
 
-    author_element = page.locator(".t-user_id")
-    expect(author_element).to_have_text("user_id: 1")
+
+
+#test for creating a new listing
+def test_create_space(db_connection, page, test_web_address):
+    db_connection.seed("/seeds/database_connection.sql")
+    page.goto(f"http://{test_web_address}/space/new")
+
+    page.click("text=List a space")
+
+    # Then we fill out the field with the name attribute 'name'
+    page.fill("input[name='name']", "Luxurious villa")
+    # And the field with the name attribute 'location', etc....
+    page.fill("input[name='location']", "bali")
+    page.fill("input[name='description']", "A magnificent seaside villa with a personal chef")
+    page.fill("input[name='price']", "700.00")
+    page.fill("input[name='user_id']", "5") #should the user id be generated? if so it shouldnt be filled. comfused rn
+    
+    name_element = page.locator(".t-name")
+    expect(name_element).to_have_text("name: Luxurious villa")
+
+    location_element = page.locator(".t-location")
+    expect(location_element).to_have_text("location: bali")
+    
+    description_element = page.locator(".t-description")
+    expect(description_element).to_have_text("description: A magnificent seaside villa with a personal chef")
+
+    price_element = page.locator(".t-price")
+    expect(price_element).to_have_text("price: 400.00")
+
+    user_id_element = page.locator(".t-user_id")
+    expect(user_id_element).to_have_text("user_id: 5")
+
+#test for new listing form pages
+def test_get_new_listing_form(page, test_web_address):
+    # We load a virtual browser and navigate to the /index page
+    page.goto(f"http://{test_web_address}/space/new")
+    # We look at the <p> tag
+    strong_tag = page.locator("p")
+    # We assert that it has the text "This is the homepage."
+    expect(strong_tag).to_have_text("Create a new listing")
+
+
+    
+
+
+
 
 
