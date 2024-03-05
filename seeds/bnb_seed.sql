@@ -49,6 +49,7 @@ CREATE TABLE space_availability (
   date_3 boolean,
   constraint fk_space_id foreign key(space_id)
     references spaces(id)
+    on delete cascade
 );
 
 -- Inserting users
