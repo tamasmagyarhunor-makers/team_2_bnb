@@ -43,6 +43,7 @@ CREATE TABLE requests (
 
 CREATE TABLE space_availability (
   id SERIAL PRIMARY KEY,
+  space_id int,
   date_1 boolean,
   date_2 boolean,
   date_3 boolean,
