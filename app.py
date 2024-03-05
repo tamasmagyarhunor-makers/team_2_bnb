@@ -15,6 +15,18 @@ app = Flask(__name__)
 def get_index():
     return render_template('index.html')
 
+@app.route('/login', methods=['GET'])
+def get_login():
+    return render_template('login.html')
+
+@app.route('/sign_up', methods=['GET'])
+def get_sign_up():
+    return render_template('sign_up.html')
+
+@app.route('/list_a_space', methods=['GET'])
+def get_list_a_space():
+    return render_template('list_a_space.html')
+
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database
 # if started in test mode.
