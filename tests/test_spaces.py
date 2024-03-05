@@ -27,5 +27,5 @@ Given a space's information is completed
 it is returned in a nice format
 """
 def test_space_is_correctly_formatted():
-    space = (1, "House by the Lake", "Italy", "It is a house by the lake", 50, 1)
+    space = Space(1, "House by the Lake", "Italy", "It is a house by the lake", 50, 1)
     assert str(space) == "1, House by the Lake, Italy, It is a house by the lake, 50, 1"
