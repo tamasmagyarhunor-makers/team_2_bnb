@@ -10,7 +10,7 @@ def test_space_attributes_are_correct():
     assert space.name == "House by the Lake"
     assert space.location == "Italy"
     assert space.description == "It is a house by the lake"
-    assert space.price_per_night == 50
+    assert space.price == 50
     assert space.owner_id == 1
 
 """
