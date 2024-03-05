@@ -23,6 +23,10 @@ def get_login():
 def get_sign_up():
     return render_template('sign_up.html')
 
+@app.route('/list_a_space', methods=['GET'])
+def get_list_a_space():
+    return render_template('list_a_space.html')
+
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database
 # if started in test mode.
