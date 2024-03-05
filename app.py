@@ -25,6 +25,10 @@ def get_login():
 def get_sign_up():
     return render_template('sign_up.html')
 
+@app.route('/list_a_space', methods=['GET'])
+def get_list_a_space():
+    return render_template('list_a_space.html')
+
 # -------- SPACES ----------
 
 # Get details of all spaces - GET /space - SELECT * FROM spaces
