@@ -72,10 +72,10 @@ INSERT INTO spaces (name, location, description, price, user_id) VALUES
 ('Beach House', 'Miami', 'A beautiful house steps away from the beach.', 200.00, 3);
 
 -- Inserting bookings
-INSERT INTO bookings (space_name, booking_status, start_date, end_date, user_id) VALUES
-('Cozy Studio Apartment', 'Pending', '2024-03-04', '2024-03-06', 1),
-('Spacious Loft', 'Approved', '2024-03-05', '2024-03-08', 2),
-('Beach House', 'Pending', '2024-04-06', '2024-04-10', 3);
+INSERT INTO bookings (space_name, booking_status, start_date, end_date, space_id, user_id) VALUES
+('Cozy Studio Apartment', 'Pending', '2024-03-04', '2024-03-06', 1, 1),
+('Spacious Loft', 'Approved', '2024-03-05', '2024-03-08', 2, 2),
+('Beach House', 'Pending', '2024-04-06', '2024-04-10', 3, 3);
 
 -- Inserting availability
 INSERT INTO space_availability (date_1, date_2, date_3, space_id) VALUES
