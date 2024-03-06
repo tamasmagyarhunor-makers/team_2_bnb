@@ -11,10 +11,10 @@
       {% for space in spaces %}
         <li>
           <!-- We can use {{ placeholders }} in HTML attributes too -->
-          <div id = name>{{space.name}}</div>
-          <div id = location>{{space.location}}</div>
-          <div id = description>{{space.description}}</div>
-          <div id = price>{{space.price}}</div>
+          <p class="t-name">name: {{space.name}}</p>
+          <p class="t-location">location: {{space.location}}</p>
+          <p class="t-description">description: {{space.description}}</p>
+          <p class="t-price">price: {{space.price}}</p>
           <a href="/space/{{space.id}}">view details</a>
         </li>
       {% endfor %}

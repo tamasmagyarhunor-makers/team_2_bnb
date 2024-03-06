@@ -41,15 +41,15 @@ def test_get_sign_up(page, test_web_address):
 # -------- SPACES -------------------------------------------
 
 
-#test to list all the spaces
+# #test to list all the spaces
 def test_get_all_space(db_connection, page, test_web_address):
     # We seed our database with the book store seed file
     db_connection.seed("seeds/bnb_seed.sql")
 
-    # We load a virtual browser and navigate to the /space page
+#    # We load a virtual browser and navigate to the /space page
     page.goto(f"http://{test_web_address}/spaces")
 
-    # # We look at all the <li> tags
+#     # # We look at all the <li> tags
     list_items = page.locator("li")
 
     # We assert that it has the spaces in it
@@ -58,7 +58,6 @@ def test_get_all_space(db_connection, page, test_web_address):
         "Spacious Loft",
         "Beach House",
     ])
-
 
 
 #test to get a single space
