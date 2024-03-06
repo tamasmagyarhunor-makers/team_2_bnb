@@ -1,15 +1,16 @@
-class Space:
-    def __init__(self, id, name, location, description, price, user_id):
+class User:
+    def __init__(self, id, title, first_name, last_name, email_address, password, phone_number):
         self.id = id
-        self.name = name
-        self.location = location
-        self.description = description
-        self.price = price
-        self.user_id = user_id
+        self.title = title
+        self.first_name = first_name
+        self.last_name = last_name
+        self.email_address = email_address
+        self.password = password
+        self.phone_number = phone_number
 
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
     
     def __repr__(self):
-        return f"{self.id}, {self.name}, {self.location}, {self.description}, {self.price}, {self.user_id}"
+        return f"{self.id}, {self.title}, {self.first_name}, {self.last_name}, {self.email_address}, {self.password}, {self.phone_number}"
