@@ -38,10 +38,10 @@ CREATE TABLE bookings (
   booking_status varchar(100),
   start_date date,
   end_date date,
-  -- space_id int,
-  -- constraint fk_space_id foreign key(space_id)
-  --   references spaces(id)
-  --   on delete cascade,
+  space_id int,
+  constraint fk_space_id foreign key(space_id)
+    references spaces(id)
+    on delete cascade,
   user_id int,
   constraint fk_user_id foreign key(user_id)
     references users(id)
