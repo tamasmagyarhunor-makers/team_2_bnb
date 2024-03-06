@@ -1,71 +1,69 @@
 from playwright.sync_api import Page, expect
 
-# Tests for your routes go here
 
-"""
-We can render the index page
-"""
+
+# --------- LOGIN ------------------------------------------------
+
 def test_get_index(page, test_web_address):
     # We load a virtual browser and navigate to the /index page
-    page.goto(f"http://{test_web_address}/home")
-    # We look at the <p> tag
-    strong_tag = page.locator("p")
-
-     tag = page.locator("h1")
-
+    page.goto(f"http://{test_web_address}/index")
+    # We look at the <h1> tag
+    # strong_tag = page.locator("p")
+    tag = page.locator("h1")
+    print(str(tag))
     # We assert that it has the text "This is the homepage."
-
     expect(tag).to_have_text("Welcome to MakersBnB")
+
+
 
 
 def test_get_login(page, test_web_address):
     # We load a virtual browser and navigate to the /index page
     page.goto(f"http://{test_web_address}/login")
-
-    # We look at the <p> tag
+    # We look at the <h1> tag
     tag = page.locator("h1")
-
     # We assert that it has the text "This is the homepage."
     expect(tag).to_have_text("Log in to MakersBnB")    
+
+
+
 
 def test_get_sign_up(page, test_web_address):
     # We load a virtual browser and navigate to the /index page
     page.goto(f"http://{test_web_address}/sign_up")
-
-    # We look at the <p> tag
+    # We look at the <h1> tag
     tag = page.locator("h1")
-
     # We assert that it has the text "This is the homepage."
-    expect(tag).to_have_text("Sign up to MakersBnB") 
+    expect(tag).to_have_text("Sign up to MakersBnB")    
 
-    # We assert that it has the text "This is the homepage."
-    expect(tag).to_have_text("Sign up to MakersBnB")      
 
-    expect(strong_tag).to_have_text("This is the homepage.")
+
+# -------- SPACES -------------------------------------------
 
 
 #test to list all the spaces
 def test_get_all_space(db_connection, page, test_web_address):
     # We seed our database with the book store seed file
-    db_connection.seed("/seeds/database_connection.sql")
+    db_connection.seed("seeds/bnb_seed.sql")
 
-    # We load a virtual browser and navigate to the /books page
-    page.goto(f"http://{test_web_address}/space")
+    # We load a virtual browser and navigate to the /space page
+    page.goto(f"http://{test_web_address}/spaces")
 
-    # We look at all the <li> tags
+    # # We look at all the <li> tags
     list_items = page.locator("li")
 
-    # We assert that it has the books in it
+    # We assert that it has the spaces in it
     expect(list_items).to_have_text([
-        "Cozy Studio Apartment, New York, A small but comfortable studio in downtown., 100.00, 1"
-        "Spacious Loft, Los Angeles, A modern loft with city views., 150.00, 2"
-        "Beach House, Miami, A beautiful house steps away from the beach., 200.00"
+        "Cozy Studio Apartment, New York, A small but comfortable studio in downtown., 100.00, 1",
+        "Spacious Loft, Los Angeles, A modern loft with city views., 150.00, 2",
+        "Beach House, Miami, A beautiful house steps away from the beach., 200.00",
     ])
+
 
 
 #test to get a single space
 def test_get_space(db_connection, page, test_web_address):
-    db_connection.seed("/seeds/database_connection.sql")
+    db_connection.seed("/seeds/bnb_seed.sql")
 
     # We visit the space page
     page.goto(f"http://{test_web_address}/space")
@@ -96,9 +94,21 @@ def test_get_space(db_connection, page, test_web_address):
 
 
 
+#test for new listing form pages
+def test_get_new_listing_form(page, test_web_address):
+    # We load a virtual browser and navigate to the /index page
+    page.goto(f"http://{test_web_address}/space/new")
+    # We look at the <p> tag
+    strong_tag = page.locator("p")
+    # We assert that it has the text "This is the homepage."
+    expect(strong_tag).to_have_text("Create a new listing")
+
+
+
+
 #test for creating a new listing
 def test_create_space(db_connection, page, test_web_address):
-    db_connection.seed("/seeds/database_connection.sql")
+    db_connection.seed("/seeds/bnb_seed.sql")
     page.goto(f"http://{test_web_address}/space/new")
 
     page.click("text=List a space")
@@ -126,17 +136,36 @@ def test_create_space(db_connection, page, test_web_address):
     user_id_element = page.locator(".t-user_id")
     expect(user_id_element).to_have_text("user_id: 5")
 
-#test for new listing form pages
-def test_get_new_listing_form(page, test_web_address):
-    # We load a virtual browser and navigate to the /index page
-    page.goto(f"http://{test_web_address}/space/new")
-    # We look at the <p> tag
-    strong_tag = page.locator("p")
-    # We assert that it has the text "This is the homepage."
-    expect(strong_tag).to_have_text("Create a new listing")
 
 
+# -------- USERS -----------------------------------------------------------
+
+
+#test to get one specific user, a link to the user will be found on the space they have listed
+def test_get_all_users(db_connection, page, test_web_address):
+    db_connection.seed("/seeds/bnb_seed.sql")
+    # We visit the space page in question
+    page.goto(f"http://{test_web_address}/space")
+    # Click choose a certain space
+    page.click("Cozy Studio Apartment, New York, A small but comfortable studio in downtown., 100.00, 1")
+
+    page.click("Your host details")  # the route on this link will be /user/1. user 1 listed this property as shown above
+
+    #after navigating to the user through their listing page, we check that some details are present on this page
+    first_name_element = page.locator(".t-first_name")
+    expect(first_name_element).to_have_text("first_name: john")
+
+    phone_number_element = page.locator(".t-phone_number")
+    expect(phone_number_element).to_have_text("Phone_number: 07926345037")
     
+    # description_element = page.locator(".t-description")
+    # expect(description_element).to_have_text("description: i enjoy long walks on the beach and cooking for friends")
+
+
+
+
+
+
 
 
 

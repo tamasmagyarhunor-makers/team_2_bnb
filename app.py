@@ -1,6 +1,9 @@
 import os
-from flask import Flask, request, render_template, redirect, url_for
 from lib.database_connection import get_flask_database_connection
+from lib.space import *
+from lib.space_repository import *
+from flask import Flask, request, render_template, redirect, url_for, session
+
 
 
 # Create a new Flask app
@@ -32,21 +35,21 @@ def get_list_a_space():
 # -------- SPACES ----------
 
 # Get details of all spaces - GET /space - SELECT * FROM spaces
-@app.route('/space', methods=['GET'])
+@app.route('/spaces', methods=['GET'])
 def get_all_spaces():
     connection = get_flask_database_connection(app)
-    repository = space_repo(connection)
+    repository = SpaceRepository(connection)
     spaces = repository.all()
-    return render_template('spaces/spaces.html', space = spaces)
+    return render_template('spaces.html', spaces=spaces)
 
 
 # Get details of a single space - GET /space/<id> - SELECT * FROM spaces WHERE id = <id>
 @app.route('/space/<int:space_id>', methods=['GET'])
 def get_space(space_id):
     connection = get_flask_database_connection(app)
-    repository = space_repo(connection)
+    repository = SpaceRepository(connection)
     space = repository.find(space_id)
-    return render_template('spaces/space.html', space=space)
+    return render_template(f'space/{space}.html', space=space)
 
 
 # GET /spaces/new
@@ -59,8 +62,8 @@ def get_new_space():
 @app.route('/space', methods=['POST'])
 def create_new_space():
     connection = get_flask_database_connection(app)
-    repository = space_repo(connection)
-    new_space = space(
+    repository = SpaceRepository(connection)
+    new_space = Space(
         None,
         request.form['name'],
         request.form['location'],
@@ -87,35 +90,48 @@ def get_all_users():
 @app.route('/user/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     connection = get_flask_database_connection(app)
-    repository = user_repo(connection)
+    repository = UserRepository(connection)
     user = repository.find(user_id)
-    return render_template('users/user.html', user=user)
+    return render_template('users/<int:user_id>.html', user=user)
 
-# -------- AVAILABILITY ----------
-
-# Get availability of all spaces - GET /availability - SELECT * FROM availability
-
-@app.route('/space/availability', methods=['GET'])
-def get_all_users():
+# Submit a new user - POST /user - INSERT INTO user VALUES ...
+@app.route('/sign_up/submit', methods=['POST'])
+def create_new_user():
     connection = get_flask_database_connection(app)
-    repository = space_repo(connection)
-    users = repository.all()
-    return render_template('spaces/spaces.html', user = users)
+    repository = UserRepository(connection)
+    user = User(
+        None,
+        request.form['title'],
+        request.form['first_name'],
+        request.form['last_name'],
+        request.form['email'],
+        request.form['phone_number'],
+        request.form['password'])
+    new_user = repository.create(new_user)
+    return redirect(f"/user/{user.id}")
 
-# Get availability of a single space - GET /availability/<space_id> - SELECT * FROM availability WHERE space_id = <space_id>
-
-@app.route('spaces/availability/<int:space_id>', methods=['GET'])
-def get_space_availability(space_id):
+# Submit a login request - POST /login/submit - SELECT password FROM users WHERE email=<email>
+@app.route('/login/submit', methods=['POST'])
+def submit_login_request():
     connection = get_flask_database_connection(app)
-    repository = space_repo(connection)
-    space = repository.find(space_id)
-    return render_template('spaces/space.html', space=space)
+    repository = UserRepository(connection)
+    entered_email = request.form['email']
+    entered_password = request.form['password']
+    stored_credentials = {'email':entered_email, 'password':entered_password}
+    if stored_credentials.get(entered_password) == repository.get_password(entered_email): # this will need to be created in user_repository.py
+        user_id = repository.get_id(entered_email) # this will need adding to user repository
+        session['user_id'] = user_id
+        return redirect(f"/spaces")
+    return redirect(f"/user/{user.id}")
 
 # -------- REQUESTS ----------
+# Use this code to retrieve logged in user id --> user_id = session.get('user_id')
+
+
 
 # Get booking requests by booker - GET /requests/<booker_id> - SELECT * FROM bookings WHERE booker_id = <booker_id>
 
-@app.route('requests/booker/<int:booker_id>', methods=['GET'])
+@app.route('/requests/booker/<int:booker_id>', methods=['GET'])
 def get_requests_by_booker(booker_id):
     connection = get_flask_database_connection(app)
     repository = user_repo(connection)
@@ -136,6 +152,26 @@ def get_requests_by_booker(booker_id):
 
 #     - PATCH availability SET <date> = False WHERE space_id = <space_id>
 #     - PATCH bookings SET <status> = 'accepted' WHERE space_id = <space_id>
+
+# -------- AVAILABILITY ----------
+
+# Get availability of all spaces - GET /availability - SELECT * FROM availability
+
+@app.route('/space/availability', methods=['GET'])
+def get_availability():
+    connection = get_flask_database_connection(app)
+    repository = SpaceRepository(connection)
+    users = repository.all()
+    return render_template('spaces/spaces.html', user = users)
+
+# Get availability of a single space - GET /availability/<space_id> - SELECT * FROM availability WHERE space_id = <space_id>
+
+@app.route('/spaces/availability/<int:space_id>', methods=['GET'])
+def get_space_availability(space_id):
+    connection = get_flask_database_connection(app)
+    repository = SpaceRepository(connection)
+    space = repository.find(space_id)
+    return render_template('spaces/space.html', space=space)
 
 # END ROUTES
 
