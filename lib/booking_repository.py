@@ -1,4 +1,4 @@
-from lib.booking import Booking
+from lib.bookings import Booking
 
 class BookingRepository():
     def __init__(self, connection):
@@ -23,8 +23,13 @@ class BookingRepository():
             booking.space_name, booking.booking_status, booking.start_date, booking.end_date, booking.space_id, booking.user_id])
         return None
     
-    def update(self, space):
+    def delete(self, booking_id):
         self._connection.execute(
-            'UPDATE spaces SET name = %s,  location = %s,  description = %s, price = %s, user_id = %s WHERE id = %s',
-            [space.name, space.location, space.description, space.price, space.user_id, space.id])
+            'DELETE FROM Bookings WHERE id = %s', [booking_id])
+        return None
+    
+    def update(self, booking):
+        self._connection.execute(
+            'UPDATE bookings SET space_name = %s,  booking_status = %s,  start_date = %s, end_date = %s, space_id = %s, user_id = %s WHERE id = %s',
+            [booking.space_name, booking.booking_status, booking.start_date, booking.end_date, booking.space_id, booking.user_id, booking.id])
         return None
