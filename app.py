@@ -49,7 +49,7 @@ def get_space(space_id):
     connection = get_flask_database_connection(app)
     repository = SpaceRepository(connection)
     space = repository.find(space_id)
-    return render_template(f'space/{space}.html', space=space)
+    return render_template('show_space.html', space=space)
 
 
 # GET /spaces/new

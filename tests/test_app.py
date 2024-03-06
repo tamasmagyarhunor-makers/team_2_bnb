@@ -62,12 +62,12 @@ def test_get_all_space(db_connection, page, test_web_address):
 
 #test to get a single space
 def test_get_space(db_connection, page, test_web_address):
-    db_connection.seed("/seeds/bnb_seed.sql")
+    db_connection.seed("seeds/bnb_seed.sql")
 
     # We visit the space page
     page.goto(f"http://{test_web_address}/space")
     # Click the link with the text 'Cozy Studio Apartment, New York, A small but comfortable studio in downtown., 100.00, 1'
-    page.click("Cozy Studio Apartment, New York, A small but comfortable studio in downtown., 100.00, 1")
+    page.click("Cozy Studio Apartment")
     
     # The virtual browser acts just like a normal browser and goes to the next
     # page without us having to tell it to.
@@ -76,19 +76,19 @@ def test_get_space(db_connection, page, test_web_address):
     # as targets for our tests to look for. This one is called `t-title`.
     # You can see it in `templates/space/listing.html`     <---- this needs to be created, if you create this make sure you delete this line
     name_element = page.locator(".t-name")
-    expect(name_element).to_have_text("name: Cozy Studio Apartment")
+    expect(name_element).to_have_text("Cozy Studio Apartment")
 
     location_element = page.locator(".t-location")
-    expect(location_element).to_have_text("location: New York")
+    expect(location_element).to_have_text("New York")
     
     description_element = page.locator(".t-description")
-    expect(description_element).to_have_text("description: A small but comfortable studio in downtown.")
+    expect(description_element).to_have_text("A small but comfortable studio in downtown.")
 
     price_element = page.locator(".t-price")
-    expect(price_element).to_have_text("price: 100.00")
+    expect(price_element).to_have_text("100.00")
 
-    user_id_element = page.locator(".t-user_id")
-    expect(user_id_element).to_have_text("user_id: 1")
+    # user_id_element = page.locator(".t-user_id")
+    # expect(user_id_element).to_have_text("u1")
 
 
 

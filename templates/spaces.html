@@ -11,11 +11,10 @@
       {% for space in spaces %}
         <li>
           <!-- We can use {{ placeholders }} in HTML attributes too -->
-          <p class="t-name">name: {{space.name}}</p>
-          <p class="t-location">location: {{space.location}}</p>
-          <p class="t-description">description: {{space.description}}</p>
-          <p class="t-price">price: {{space.price}}</p>
-          <a href="/space/{{space.id}}">view details</a>
+          <a href="/space/{{space.id}}"><p class="t-name">{{space.name}}</p></a>
+          <p class="t-location">{{space.location}}</p>
+          <p class="t-description">{{space.description}}</p>
+          <p class="t-price">{{space.price}}</p>
         </li>
       {% endfor %}
       <!-- Jinja isn't Python, so we need an endfor to close the loop -->
