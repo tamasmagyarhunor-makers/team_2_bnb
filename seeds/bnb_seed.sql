@@ -48,16 +48,18 @@ CREATE TABLE bookings (
     on delete cascade
 );
 
-CREATE TABLE space_availability (
-  id SERIAL PRIMARY KEY,
-  space_id int,
-  date_1 boolean,
-  date_2 boolean,
-  date_3 boolean,
-  constraint fk_space_id foreign key(space_id)
-    references spaces(id)
-    on delete cascade
-);
+-- SQL to make availability table if functionality is implemented
+
+-- CREATE TABLE space_availability (
+--   id SERIAL PRIMARY KEY,
+--   space_id int,
+--   date_1 boolean,
+--   date_2 boolean,
+--   date_3 boolean,
+--   constraint fk_space_id foreign key(space_id)
+--     references spaces(id)
+--     on delete cascade
+-- );
 
 -- Inserting users
 INSERT INTO users (title, first_name, last_name, email_address, password, phone_number) VALUES
@@ -77,8 +79,9 @@ INSERT INTO bookings (space_name, booking_status, start_date, end_date, space_id
 ('Spacious Loft', 'Approved', '2024-03-05', '2024-03-08', 2, 2),
 ('Beach House', 'Pending', '2024-04-06', '2024-04-10', 3, 3);
 
--- Inserting availability
-INSERT INTO space_availability (date_1, date_2, date_3, space_id) VALUES
-(true, false, true, 1),
-(false, true, true, 2),
-(true, true, false, 3);
+-- SQL to add availability data to table if functionality is implemented
+-- -- Inserting availability
+-- INSERT INTO space_availability (date_1, date_2, date_3, space_id) VALUES
+-- (true, false, true, 1),
+-- (false, true, true, 2),
+-- (true, true, false, 3);
