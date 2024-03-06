@@ -11,8 +11,17 @@ DROP TABLE IF EXISTS space_availability cascade;
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
+  title varchar(15),
+  first_name varchar(40),
+  last_name varchar(40),
   email_address varchar(100),
-  password varchar(100)
+  password varchar(100),
+  phone_number varchar(11)
+--   space_id INT
+--   set a space_id as foreign key
+--   constraint fk_space_id foreign key(space_id)
+--     references spaces(id)
+--     on delete cascade
 );
 
 CREATE TABLE spaces (
@@ -22,10 +31,11 @@ CREATE TABLE spaces (
   description text,
   price float,
   user_id int,
-  constraint fk_owner_id foreign key(user_id)
+  constraint fk_user_id foreign key(user_id)
     references users(id)
     on delete cascade
 );
+
 
 CREATE TABLE requests (
   id SERIAL PRIMARY KEY,
@@ -52,11 +62,22 @@ CREATE TABLE space_availability (
     on delete cascade
 );
 
+-- Add space_id column to users table
+ALTER TABLE users
+ADD COLUMN space_id INT,
+ADD CONSTRAINT fk_space_id FOREIGN KEY (space_id)
+REFERENCES spaces(id)
+ON DELETE CASCADE;
+
+--   constraint fk_space_id foreign key(space_id)
+--     references spaces(id)
+--     on delete cascade
+
 -- Inserting users
-INSERT INTO users (email_address, password) VALUES
-('user1@example.com', 'password1'),
-('user2@example.com', 'password2'),
-('user3@example.com', 'password3');
+INSERT INTO users (title, first_name, last_name, email_address, password, phone_number) VALUES
+('Mr', 'John', 'Smith', 'email@testmail.com', 'Password1', '07926345037' ),
+('Miss', 'Regina', 'Phalange', 'Regina_phalange@testmail.com', 'Password2', '07926345048'),
+('Mr', 'Ken', 'Adams', 'ken_adams@testmail.com', 'Password3', '07926345081');
 
 -- Inserting spaces
 INSERT INTO spaces (name, location, description, price, user_id) VALUES
