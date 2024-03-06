@@ -34,14 +34,16 @@ CREATE TABLE spaces (
 
 CREATE TABLE bookings (
   id SERIAL PRIMARY KEY,
-  request_status varchar(100),
-  date date,
-  space_id int,
-  constraint fk_space_id foreign key(space_id)
-    references spaces(id)
-    on delete cascade,
-  booker_id int,
-  constraint fk_booker_id foreign key(booker_id)
+  space_name varchar(100),
+  booking_status varchar(100),
+  start_date date,
+  end_date date,
+  -- space_id int,
+  -- constraint fk_space_id foreign key(space_id)
+  --   references spaces(id)
+  --   on delete cascade,
+  user_id int,
+  constraint fk_user_id foreign key(user_id)
     references users(id)
     on delete cascade
 );
@@ -70,10 +72,10 @@ INSERT INTO spaces (name, location, description, price, user_id) VALUES
 ('Beach House', 'Miami', 'A beautiful house steps away from the beach.', 200.00, 3);
 
 -- Inserting bookings
-INSERT INTO bookings (request_status, date, space_id, booker_id) VALUES
-('Pending', '2024-03-04', 1, 2),
-('Approved', '2024-03-05', 2, 3),
-('Pending', '2024-03-06', 3, 1);
+INSERT INTO bookings (space_name, booking_status, start_date, end_date, user_id) VALUES
+('Cozy Studio Apartment', 'Pending', '2024-03-04', '2024-03-06', 1),
+('Spacious Loft', 'Approved', '2024-03-05', '2024-03-08', 2),
+('Beach House', 'Pending', '2024-04-06', '2024-04-10', 3);
 
 -- Inserting availability
 INSERT INTO space_availability (date_1, date_2, date_3, space_id) VALUES
