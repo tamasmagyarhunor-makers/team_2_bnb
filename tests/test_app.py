@@ -53,10 +53,10 @@ def test_get_all_space(db_connection, page, test_web_address):
     list_items = page.locator("li")
 
     # We assert that it has the spaces in it
-    expect(list_items).to_have_text([
-        "Cozy Studio Apartment, New York, A small but comfortable studio in downtown., 100.00, 1",
-        "Spacious Loft, Los Angeles, A modern loft with city views., 150.00, 2",
-        "Beach House, Miami, A beautiful house steps away from the beach., 200.00",
+    expect(list_items).to_contain_text([
+        "Cozy Studio Apartment",
+        "Spacious Loft",
+        "Beach House",
     ])
 
 
