@@ -24,22 +24,35 @@ app.secret_key = 'secret'
 def get_index():
     connection = get_flask_database_connection(app)
     repository = UserRepository(connection)
-    user = repository.find(session['user_id'])
-    return render_template('index.html', user=user)
-
+    if 'user_id' in session:
+        user = repository.find(session['user_id'])
+        return render_template('index.html', user=user)
+    else:
+        return render_template('index.html')
 @app.route('/login', methods=['GET'])
 def get_login():
     connection = get_flask_database_connection(app)
     repository = UserRepository(connection)
-    user = repository.find(session['user_id'])
-    return render_template('login.html', user=user)
+    if 'user_id' in session:
+        user = repository.find(session['user_id'])
+        return render_template('login.html', user=user)
+    else:
+        return render_template('login.html')
+    
+# @app.route('/logout')
+# def logout():
+#     session.clear()
+#     return redirect(url_for('index.html'))
 
 @app.route('/sign_up', methods=['GET'])
 def get_sign_up():
     connection = get_flask_database_connection(app)
     repository = UserRepository(connection)
-    user = repository.find(session['user_id'])
-    return render_template('sign_up.html', user=user)
+    if 'user_id' in session:
+        user = repository.find(session['user_id'])
+        return render_template('sign_up.html', user=user)
+    else:
+        return render_template('sign_up.html')
 
 @app.route('/list_a_space', methods=['GET'])
 def get_list_a_space():
@@ -141,23 +154,47 @@ def create_new_user():
     new_user = repository.create(new_user)
     return redirect(f"/user/{user.id}")
 
-# Submit a login request - POST /login/submit - SELECT password FROM users WHERE email=<email>
 @app.route('/login/submit', methods=['POST'])
 def submit_login_request():
     # making the connection to the database
     connection = get_flask_database_connection(app)
     repository = UserRepository(connection)
-    user = repository.find(session['user_id'])
-    # storing the user's entered credentials in a dictionary
+    
+    # Clearing session (assuming you want to clear the session upon login)
+    session.clear()
+    
+    # Storing the user's entered credentials in a dictionary
     entered_email = request.form.get('email_address')
     entered_password = request.form.get('password')
-    # getting the user in dictionary format which matches the email from the database
-    stored_password = repository.find_by_email(entered_email).get('password')
-    if entered_password == stored_password:
-        session['user_id'] = repository.find_by_email(entered_email).get('id')
-        return redirect("/spaces", user=user)
+    
+    # Getting the user from the database based on the entered email
+    user = repository.find_by_email(entered_email)
+    
+    if user is not None and user['password'] == entered_password:
+        # Set the user ID in the session upon successful login
+        session['user_id'] = user['id']
+        return redirect("/spaces")
     else:
-        return render_template('login.html', invalid_login=True, user=user)
+        return render_template('login.html', invalid_login=True)
+
+# Submit a login request - POST /login/submit - SELECT password FROM users WHERE email=<email>
+# @app.route('/login/submit', methods=['POST'])
+# def submit_login_request():
+#     # making the connection to the database
+#     # session.clear()
+#     connection = get_flask_database_connection(app)
+#     repository = UserRepository(connection)
+#     user = repository.find(session['user_id'])
+#     # storing the user's entered credentials in a dictionary
+#     entered_email = request.form.get('email_address')
+#     entered_password = request.form.get('password')
+#     # getting the user in dictionary format which matches the email from the database
+#     stored_password = repository.find_by_email(entered_email).get('password')
+#     if entered_password == stored_password:
+#         session['user_id'] = repository.find_by_email(entered_email).get('id')
+#         return redirect("/spaces")
+#     else:
+#         return render_template('login.html', invalid_login=True)
 
 
 # -------- REQUESTS ----------
