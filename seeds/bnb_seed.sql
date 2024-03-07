@@ -1,9 +1,3 @@
--- The job of this file is to reset all of our important database tables.
--- And add any data that is needed for the tests to run.
--- This is so that our tests, and application, are always operating from a fresh
--- database state, and that tests don't interfere with each other.
-
--- First, we must delete (drop) all our tables
 DROP TABLE IF EXISTS users cascade;
 DROP TABLE IF EXISTS spaces cascade;
 DROP TABLE IF EXISTS bookings cascade;
@@ -73,11 +67,13 @@ INSERT INTO spaces (name, location, description, price, user_id) VALUES
 ('Spacious Loft', 'Los Angeles', 'A modern loft with city views.', 150.00, 2),
 ('Beach House', 'Miami', 'A beautiful house steps away from the beach.', 200.00, 3);
 
--- Inserting bookings
+
+
 INSERT INTO bookings (space_name, booking_status, start_date, end_date, space_id, user_id) VALUES
 ('Cozy Studio Apartment', 'Pending', '2024-03-04', '2024-03-06', 1, 1),
 ('Spacious Loft', 'Approved', '2024-03-05', '2024-03-08', 2, 2),
 ('Beach House', 'Pending', '2024-04-06', '2024-04-10', 3, 3);
+
 
 -- SQL to add availability data to table if functionality is implemented
 -- -- Inserting availability

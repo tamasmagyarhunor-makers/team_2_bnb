@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MakersBnB</title>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <h1>Listings</h1>
+    <ul>
+      <!-- We'll use Jinja's `for` loop to iterate over all books -->
+      {% for space in spaces %}
+        <li>
+          <!-- We can use {{ placeholders }} in HTML attributes too -->
+          <a href="/space/{{space.id}}"><p class="t-name">{{space.name}}</p></a>
+          <p class="t-location">{{space.location}}</p>
+          <p class="t-description">{{space.description}}</p>
+          <p class="t-price">{{space.price}}</p>
+        </li>
+      {% endfor %}
+      <!-- Jinja isn't Python, so we need an endfor to close the loop -->
+    </ul>
+
+    <!-- This is a link to another page. -->
+    <!-- The browser will send `GET /books/new` when the user clicks this -->
+    <a href="/space/new">Add a new space</a>
+  </body>
+</html>
