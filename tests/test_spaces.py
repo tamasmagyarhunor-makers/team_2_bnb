@@ -11,7 +11,7 @@ def test_space_attributes_are_correct():
     assert space.location == "Italy"
     assert space.description == "It is a house by the lake"
     assert space.price == 50
-    assert space.owner_id == 1
+    assert space.user_id == 1
 
 """
 When two objects are compared with identical data
