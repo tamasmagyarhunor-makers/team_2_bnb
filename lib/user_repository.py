@@ -17,6 +17,14 @@ class UserRepository():
             user.title, user.first_name, user.last_name, user.email_address, user.password, user.phone_number])
         return None
     
+
+    def find(self, user_id):
+        rows = self._connection.execute(
+                 'SELECT * from users WHERE id = %s', [user_id])
+        row = rows[0]
+        return User(row["id"], row["title"], row["first_name"], row["last_name"], row["email_address"], row["password"], row["phone_number"])
+    
+
     # def find_by_email(self, email):
     #     rows = self._connection.execute(
     #              'SELECT * from users WHERE id = %s', [email])
@@ -26,8 +34,9 @@ class UserRepository():
 
     def find_by_email(self, email):
         rows = self._connection.execute('SELECT * from users WHERE email_address = %s', [email])
+
         row = rows[0]
-        
+
         user_dict = {
             "id": row["id"],
             "title": row["title"],

@@ -19,6 +19,18 @@ def test_create_user(db_connection):
         User(4, 'Dr', 'Drake', 'Ramoray', 'dr_drake_actor@daysofourlives.com', 'MyTwinIsAWrongin', "07415103842")
     ]
 
+
+"""
+When we call UserRepository#find
+We get a single User object reflecting the seed data.
+"""
+def test_get_single_user(db_connection):
+    db_connection.seed("seeds/bnb_seed.sql")
+    repository = UserRepository(db_connection)
+
+    user = repository.find(3)
+    assert user == User(3, "Mr", "Ken", "Adams", "ken_adams@testmail.com", "Password3", "07926345081")
+
 def test_get_user_details_from_email(db_connection):
     db_connection.seed("seeds/bnb_seed.sql")
     repository = UserRepository(db_connection)
@@ -33,4 +45,11 @@ def test_get_user_details_from_email(db_connection):
         "password": "Password1",
         "phone_number": '07926345037'
     }
+
         
+def test_get_user_details_from_email_not_in_database(db_connection):
+    db_connection.seed("seeds/bnb_seed.sql")
+    repository = UserRepository(db_connection)
+    result = repository.find_by_email('notindb@hello.com')
+    assert result == None
+

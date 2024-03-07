@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MakersBnB</title>
+
+        <!--
+            Head to https://github.com/makersacademy/web-applications-in-python/blob/main/pills/loading_css_or_static_files.md
+            If you're wondering how the CSS file below is being loaded.
+        -->
+        <link rel="stylesheet" href="/static/style.css" >
+    </head>
+    <body>
+        
+        <h1><p class="t-name">Request booking for {{space.name}}</p></h1>
+        <br>
+        <form action="/request" method="post">
+            <input type="hidden" id="space_id" name="space_id" value={{space.id}}>
+            <label for="start_date">Start date:</label>
+            <input type="date" id="start_date" name="start_date" required>
+
+            <label for="end_date">End date:</label>
+            <input type="date" id="end_date" name="end_date" required>
+
+           
+
+            <br>
+            <br>
+            <button>Send Request</button>
+            <br>
+            <br>
+
+
+            <a href="/spaces">Back to listings</a>
+  </body>
+</html>
+
+
+   
