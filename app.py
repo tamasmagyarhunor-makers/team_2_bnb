@@ -56,7 +56,7 @@ def get_space(space_id):
 # Returns a form to create a new spaces
 @app.route('/space/new', methods=['GET'])
 def get_new_space():
-    return render_template('spaces/new.html')
+    return render_template('list_a_space.html')
 
 # Create a new space - POST /space - INSERT INTO spaces VALUES ...
 @app.route('/space', methods=['POST'])
