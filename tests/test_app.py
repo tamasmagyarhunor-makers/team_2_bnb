@@ -65,75 +65,79 @@ def test_get_space(db_connection, page, test_web_address):
     db_connection.seed("seeds/bnb_seed.sql")
 
     # We visit the space page
-    page.goto(f"http://{test_web_address}/space")
-    # Click the link with the text 'Cozy Studio Apartment, New York, A small but comfortable studio in downtown., 100.00, 1'
-    page.click("Cozy Studio Apartment")
+    page.goto(f"http://{test_web_address}/spaces")
     
+    # Click the link with the text 'Cozy Studio Apartment, New York, A small but comfortable studio in downtown., 100.00, 1'
+    page.click("text=Cozy Studio Apartment")
+   
     # The virtual browser acts just like a normal browser and goes to the next
     # page without us having to tell it to.
-
     # Then we look for specific test classes that we have put into the HTML
     # as targets for our tests to look for. This one is called `t-title`.
     # You can see it in `templates/space/listing.html`     <---- this needs to be created, if you create this make sure you delete this line
+    
     name_element = page.locator(".t-name")
     expect(name_element).to_have_text("Cozy Studio Apartment")
-
     location_element = page.locator(".t-location")
     expect(location_element).to_have_text("New York")
-    
     description_element = page.locator(".t-description")
     expect(description_element).to_have_text("A small but comfortable studio in downtown.")
-
     price_element = page.locator(".t-price")
-    expect(price_element).to_have_text("100.00")
-
+    expect(price_element).to_have_text("100.0")
+   
     # user_id_element = page.locator(".t-user_id")
     # expect(user_id_element).to_have_text("u1")
 
 
 
 
+
 #test for new listing form pages
 def test_get_new_listing_form(page, test_web_address):
-    # We load a virtual browser and navigate to the /index page
+
+    # We load a virtual browser and navigate to the /spaces/new
     page.goto(f"http://{test_web_address}/space/new")
+
     # We look at the <p> tag
-    strong_tag = page.locator("p")
+    h1_tag = page.locator("h1")
+
     # We assert that it has the text "This is the homepage."
-    expect(strong_tag).to_have_text("Create a new listing")
+    expect(h1_tag).to_have_text("List a space")
 
 
 
 
 #test for creating a new listing
 def test_create_space(db_connection, page, test_web_address):
-    db_connection.seed("/seeds/bnb_seed.sql")
-    page.goto(f"http://{test_web_address}/space/new")
-
-    page.click("text=List a space")
-
+    db_connection.seed("seeds/bnb_seed.sql")
+    #starts at the homepage
+    page.goto(f"http://{test_web_address}/index")
+    #click login to start a session
+    page.click("text=Login")
+    #use test email and password to start a session
+    page.fill("input[name='Email address:']", "phalange@testmail.com")
+    page.fill("input[name='Password:']", "Password2")
+    page.click("text=Login")
+    page.click("text=Add a new space")
     # Then we fill out the field with the name attribute 'name'
-    page.fill("input[name='name']", "Luxurious villa")
+    page.fill("input[name='Name:']", "Luxurious villa")
     # And the field with the name attribute 'location', etc....
-    page.fill("input[name='location']", "bali")
-    page.fill("input[name='description']", "A magnificent seaside villa with a personal chef")
-    page.fill("input[name='price']", "700.00")
-    page.fill("input[name='user_id']", "5") #should the user id be generated? if so it shouldnt be filled. comfused rn
-    
+    page.fill("input[name='Location:']", "bali")
+    page.fill("input[name='Description:']", "A magnificent seaside villa with a personal chef")
+    page.fill("input[name='Price:']", "400.0")
+    # page.fill("input[name='user_id']", "5") #should the user id be generated? if so it shouldnt be filled. comfused rn
+    page.click("text=List my space")
     name_element = page.locator(".t-name")
-    expect(name_element).to_have_text("name: Luxurious villa")
-
+    expect(name_element).to_have_text("Luxurious villa")
     location_element = page.locator(".t-location")
-    expect(location_element).to_have_text("location: bali")
-    
+    expect(location_element).to_have_text("bali")
     description_element = page.locator(".t-description")
-    expect(description_element).to_have_text("description: A magnificent seaside villa with a personal chef")
-
+    expect(description_element).to_have_text("A magnificent seaside villa with a personal chef")
     price_element = page.locator(".t-price")
-    expect(price_element).to_have_text("price: 400.00")
+    expect(price_element).to_have_text("400.0")
 
-    user_id_element = page.locator(".t-user_id")
-    expect(user_id_element).to_have_text("user_id: 5")
+    # user_id_element = page.locator(".t-user_id")
+    # expect(user_id_element).to_have_text("user_id: 5")
 
 
 

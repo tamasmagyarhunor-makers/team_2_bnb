@@ -20,9 +20,9 @@ class SpaceRepository():
         return Space(row["id"], row["name"], row["location"], row["description"], row["price"], row["user_id"])
 
     def create(self, space):
-        self._connection.execute('INSERT INTO spaces (name, location, description, price, user_id) VALUES (%s, %s, %s, %s, %s)', [
+        rows_id = self._connection.execute('INSERT INTO spaces (name, location, description, price, user_id) VALUES (%s, %s, %s, %s, %s) RETURNING id', [
             space.name, space.location, space.description, space.price, space.user_id])
-        return None
+        return rows_id[0]["id"]
 
     def delete(self, space_id):
         self._connection.execute(

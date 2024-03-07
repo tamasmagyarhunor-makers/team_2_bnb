@@ -3,17 +3,15 @@ from lib.database_connection import get_flask_database_connection
 from lib.space import *
 from lib.space_repository import *
 
-from lib.bookings import *
-from lib.booking_repository import *
-
 from lib.user import *
 from lib.user_repository import *
-
+from lib.bookings import *
+from lib.booking_repository import *
 from flask import Flask, request, render_template, redirect, url_for, session
+
 
 # Create a new Flask app
 app = Flask(__name__)
-
 
 app.secret_key = 'secret'
 # GET /index
@@ -75,6 +73,14 @@ def get_am_i_logged_in():
 def get_request_availability():
     return render_template('request.html')
 
+
+@app.route('/am_i_logged_in', methods=['GET'])
+def get_am_i_logged_in():
+    connection = get_flask_database_connection(app)
+    repository = UserRepository(connection)
+    user = repository.find(session['user_id'])
+    return render_template('am_i_logged_in.html', user=user)
+
 @app.route('/request/<int:space_id>', methods=['GET'])
 def get_request_space(space_id):
     connection = get_flask_database_connection(app)
@@ -105,6 +111,7 @@ def check_availaiblity():
 def get_session():
     userID = session.get('user_id', '0')
     return userID
+
 # -------- SPACES ----------
 
 # Get details of all spaces - GET /space - SELECT * FROM spaces
@@ -139,20 +146,59 @@ def get_new_space():
     return render_template('list_a_space.html', user=user)
 
 # Create a new space - POST /space - INSERT INTO spaces VALUES ...
-@app.route('/space', methods=['POST'])
-def create_new_space():
+# @app.route('/list_a_space', methods=['POST'])
+# def create_new_space():
+#     connection = get_flask_database_connection(app)
+#     repository = SpaceRepository(connection)
+#     new_space = Space(
+#         None,
+#         request.form['name'],
+#         request.form['location'],
+#         request.form['description'],
+#         request.form['price'],
+#         request.form['user_id'])
+#     new_space = repository.create(new_space)
+#     return redirect(f"/list_a_space/{new_space.id}")
+
+
+# Creates a new space
+@app.route('/list_a_space', methods=['POST'])
+def create_space():
+    # Set up the database connection and repository
     connection = get_flask_database_connection(app)
     repository = SpaceRepository(connection)
-    new_space = Space(
-        None,
-        request.form['name'],
-        request.form['location'],
-        request.form['description'],
-        request.form['price'],
-        request.form['user_id'])
-    new_space = repository.create(new_space)
-    user = repository.find(session['user_id'])
-    return redirect(f"/space/{space.id}", user=user)
+
+    # Get the fields from the request form
+    name = request.form['name']
+    location = request.form['location']
+    description = request.form['description']
+    price = request.form['price']
+    user_id = session['user_id']
+    # Create a book object
+    space = Space(None, name, location, description, price, user_id)
+    # Check for validity and if not valid, show the form again with errors
+    if not space.is_valid():
+        return render_template('list_a_space.html', space=space, errors=space.generate_errors()), 400
+    # Save the book to the database
+    space_id = repository.create(space)
+    
+    # Redirect to the book's show route to the user can see it
+    #return render_template('space_successfully_listed.html')
+    return redirect(f"/space/{space_id}")
+
+   
+
+#     new_space = Space(
+#         None,
+#         request.form['name'],
+#         request.form['location'],
+#         request.form['description'],
+#         request.form['price'],
+#         request.form['user_id'])
+#     new_space = repository.create(new_space)
+#     user = repository.find(session['user_id'])
+#     return redirect(f"/space/{space.id}", user=user)
+
 
 
 # -------- USERS ----------
@@ -196,7 +242,22 @@ def submit_login_request():
     # making the connection to the database
     connection = get_flask_database_connection(app)
     repository = UserRepository(connection)
-    
+
+#     # storing the user's entered credentials in a dictionary
+#     entered_email = request.form.get('email_address')
+#     entered_password = request.form.get('password')
+#     stored_password = repository.find_by_email(entered_email).get('password')
+#     if entered_password == stored_password:
+#         session['user_id'] = repository.find_by_email(entered_email).get('id')
+#         return redirect("/spaces")
+#     else:
+#         return render_template('login.html', invalid_login=True)
+#     # user_id = repository.get_id(entered_email) # this will need adding to user repository
+#     #     session['user_id'] = user_id
+#     #     return redirect(f"/spaces")
+#     # else:
+#     #     pass
+
     # Clearing session (assuming you want to clear the session upon login)
     session.clear()
     
@@ -238,6 +299,7 @@ def submit_login_request():
 def submit_request():
     return redirect(f"/request")
    
+
 
 # -------- REQUESTS ----------
 # Use this code to retrieve logged in user id --> user_id = session.get('user_id')
