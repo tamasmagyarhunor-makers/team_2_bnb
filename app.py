@@ -2,6 +2,8 @@ import os
 from lib.database_connection import get_flask_database_connection
 from lib.space import *
 from lib.space_repository import *
+from lib.user import *
+from lib.user_repository import *
 from flask import Flask, request, render_template, redirect, url_for, session
 
 
@@ -59,21 +61,47 @@ def get_new_space():
     return render_template('list_a_space.html')
 
 # Create a new space - POST /space - INSERT INTO spaces VALUES ...
-@app.route('/space', methods=['POST'])
-def create_new_space():
+# @app.route('/list_a_space', methods=['POST'])
+# def create_new_space():
+#     connection = get_flask_database_connection(app)
+#     repository = SpaceRepository(connection)
+#     new_space = Space(
+#         None,
+#         request.form['name'],
+#         request.form['location'],
+#         request.form['description'],
+#         request.form['price'],
+#         request.form['user_id'])
+#     new_space = repository.create(new_space)
+#     return redirect(f"/list_a_space/{new_space.id}")
+
+
+# Creates a new space
+@app.route('/list_a_space', methods=['POST'])
+def create_space():
+    # Set up the database connection and repository
     connection = get_flask_database_connection(app)
     repository = SpaceRepository(connection)
-    new_space = Space(
-        None,
-        request.form['name'],
-        request.form['location'],
-        request.form['description'],
-        request.form['price'],
-        request.form['user_id'])
-    new_space = repository.create(new_space)
-    return redirect(f"/space/{space.id}")
+    # Get the fields from the request form
+    name = request.form['name']
+    location = request.form['location']
+    description = request.form['description']
+    price = request.form['price']
+    user_id = 1 #replace with session id when ready
+    # Create a book object
+    space = Space(None, name, location, description, price, user_id)
+    # Check for validity and if not valid, show the form again with errors
+    if not space.is_valid():
+        return render_template('list_a_space.html', space=space, errors=space.generate_errors()), 400
+    # Save the book to the database
+    space = repository.create(space)
+    #space_id = TO RETRIEVE
 
+    # Redirect to the book's show route to the user can see it
+    return render_template('space_successfully_listed.html')
+    #return redirect(f"/list_a_space/{space.id}")
 
+   
 # -------- USERS ----------
 
 # Get details of all users - GET /user - SELECT * FROM users
