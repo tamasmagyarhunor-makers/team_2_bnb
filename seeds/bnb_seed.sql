@@ -6,13 +6,17 @@
 -- First, we must delete (drop) all our tables
 DROP TABLE IF EXISTS users cascade;
 DROP TABLE IF EXISTS spaces cascade;
-DROP TABLE IF EXISTS requests cascade;
+DROP TABLE IF EXISTS bookings cascade;
 DROP TABLE IF EXISTS space_availability cascade;
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
+  title varchar(15),
+  first_name varchar(40),
+  last_name varchar(40),
   email_address varchar(100),
-  password varchar(100)
+  password varchar(100),
+  phone_number varchar(11)
 );
 
 CREATE TABLE spaces (
@@ -22,41 +26,46 @@ CREATE TABLE spaces (
   description text,
   price float,
   user_id int,
-  constraint fk_owner_id foreign key(user_id)
+  constraint fk_user_id foreign key(user_id)
     references users(id)
     on delete cascade
 );
 
-CREATE TABLE requests (
+
+CREATE TABLE bookings (
   id SERIAL PRIMARY KEY,
-  request_status varchar(100),
-  date date,
+  space_name varchar(100),
+  booking_status varchar(100),
+  start_date date,
+  end_date date,
   space_id int,
   constraint fk_space_id foreign key(space_id)
     references spaces(id)
     on delete cascade,
-  booker_id int,
-  constraint fk_booker_id foreign key(booker_id)
+  user_id int,
+  constraint fk_user_id foreign key(user_id)
     references users(id)
     on delete cascade
 );
 
-CREATE TABLE space_availability (
-  id SERIAL PRIMARY KEY,
-  space_id int,
-  date_1 boolean,
-  date_2 boolean,
-  date_3 boolean,
-  constraint fk_space_id foreign key(space_id)
-    references spaces(id)
-    on delete cascade
-);
+-- SQL to make availability table if functionality is implemented
+
+-- CREATE TABLE space_availability (
+--   id SERIAL PRIMARY KEY,
+--   space_id int,
+--   date_1 boolean,
+--   date_2 boolean,
+--   date_3 boolean,
+--   constraint fk_space_id foreign key(space_id)
+--     references spaces(id)
+--     on delete cascade
+-- );
 
 -- Inserting users
-INSERT INTO users (email_address, password) VALUES
-('user1@example.com', 'password1'),
-('user2@example.com', 'password2'),
-('user3@example.com', 'password3');
+INSERT INTO users (title, first_name, last_name, email_address, password, phone_number) VALUES
+('Mr', 'John', 'Smith', 'email@testmail.com', 'Password1', '07926345037'),
+('Miss', 'Regina', 'Phalange', 'Regina_phalange@testmail.com', 'Password2', '07926345048'),
+('Mr', 'Ken', 'Adams', 'ken_adams@testmail.com', 'Password3', '07926345081');
 
 -- Inserting spaces
 INSERT INTO spaces (name, location, description, price, user_id) VALUES
@@ -64,14 +73,15 @@ INSERT INTO spaces (name, location, description, price, user_id) VALUES
 ('Spacious Loft', 'Los Angeles', 'A modern loft with city views.', 150.00, 2),
 ('Beach House', 'Miami', 'A beautiful house steps away from the beach.', 200.00, 3);
 
--- Inserting requests
-INSERT INTO requests (request_status, date, space_id, booker_id) VALUES
-('Pending', '2024-03-04', 1, 2),
-('Approved', '2024-03-05', 2, 3),
-('Pending', '2024-03-06', 3, 1);
+-- Inserting bookings
+INSERT INTO bookings (space_name, booking_status, start_date, end_date, space_id, user_id) VALUES
+('Cozy Studio Apartment', 'Pending', '2024-03-04', '2024-03-06', 1, 1),
+('Spacious Loft', 'Approved', '2024-03-05', '2024-03-08', 2, 2),
+('Beach House', 'Pending', '2024-04-06', '2024-04-10', 3, 3);
 
--- Inserting availability
-INSERT INTO space_availability (date_1, date_2, date_3, space_id) VALUES
-(true, false, true, 1),
-(false, true, true, 2),
-(true, true, false, 3);
+-- SQL to add availability data to table if functionality is implemented
+-- -- Inserting availability
+-- INSERT INTO space_availability (date_1, date_2, date_3, space_id) VALUES
+-- (true, false, true, 1),
+-- (false, true, true, 2),
+-- (true, true, false, 3);
