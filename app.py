@@ -2,6 +2,8 @@ import os
 from lib.database_connection import get_flask_database_connection
 from lib.space import *
 from lib.space_repository import *
+from lib.user import *
+from lib.user_repository import *
 from flask import Flask, request, render_template, redirect, url_for, session
 
 
@@ -113,16 +115,32 @@ def create_new_user():
 # Submit a login request - POST /login/submit - SELECT password FROM users WHERE email=<email>
 @app.route('/login/submit', methods=['POST'])
 def submit_login_request():
+    # making the connection to the database
     connection = get_flask_database_connection(app)
     repository = UserRepository(connection)
-    entered_email = request.form['email']
-    entered_password = request.form['password']
-    stored_credentials = {'email':entered_email, 'password':entered_password}
-    if stored_credentials.get(entered_password) == repository.get_password(entered_email): # this will need to be created in user_repository.py
-        user_id = repository.get_id(entered_email) # this will need adding to user repository
-        session['user_id'] = user_id
-        return redirect(f"/spaces")
-    return redirect(f"/user/{user.id}")
+    # storing the user's entered credentials in a dictionary
+    entered_email = request.form.get('email_address')
+    entered_password = request.form.get('password')
+    # getting the user in dictionary format which matches the email from the database
+    # in format {
+    #     "id": 1,
+    #     "title": "Mr",
+    #     "first_name": "John",
+    #     "last_name": "Smith",
+    #     "email_address": "email@testmail.com",
+    #     "password": "Password1",
+    #     "phone_number": '07926345037'
+    # }
+    stored_password = repository.find_by_email(entered_email).get('password')
+    if entered_password == stored_password:
+        return redirect("/spaces")
+    else:
+        return render_template('login.html', invalid_login=True)
+    # user_id = repository.get_id(entered_email) # this will need adding to user repository
+    #     session['user_id'] = user_id
+    #     return redirect(f"/spaces")
+    # else:
+    #     pass
 
 # -------- REQUESTS ----------
 # Use this code to retrieve logged in user id --> user_id = session.get('user_id')
