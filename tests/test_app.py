@@ -110,19 +110,21 @@ def test_get_new_listing_form(page, test_web_address):
 #test for creating a new listing
 def test_create_space(db_connection, page, test_web_address):
     db_connection.seed("seeds/bnb_seed.sql")
-    page.goto(f"http://{test_web_address}/spaces")
+    #starts at the homepage
+    page.goto(f"http://{test_web_address}/index")
+    #click login to start a session
+    page.click("text=Login")
+    #use test email and password to start a session
+    page.fill("input[name='Email address:']", "phalange@testmail.com")
+    page.fill("input[name='Password:']", "Password2")
+    page.click("text=Login")
     page.click("text=Add a new space")
-
     # Then we fill out the field with the name attribute 'name'
-    page.fill("input[name='name']", "Luxurious villa")
-
+    page.fill("input[name='Name:']", "Luxurious villa")
     # And the field with the name attribute 'location', etc....
-    page.fill("input[name='location']", "bali")
-    page.fill("input[name='description']", "A magnificent seaside villa with a personal chef")
-    page.fill("input[name='price']", "400.0")
-    page.fill("input[name='available_from']", "2024-01-01")
-    page.fill("input[name='available_to']", "2024-02-02")
-
+    page.fill("input[name='Location:']", "bali")
+    page.fill("input[name='Description:']", "A magnificent seaside villa with a personal chef")
+    page.fill("input[name='Price:']", "400.0")
     # page.fill("input[name='user_id']", "5") #should the user id be generated? if so it shouldnt be filled. comfused rn
     page.click("text=List my space")
     name_element = page.locator(".t-name")
