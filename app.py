@@ -11,6 +11,8 @@ from flask import Flask, request, render_template, redirect, url_for, session
 # Create a new Flask app
 app = Flask(__name__)
 
+
+app.secret_key = 'secret'
 # GET /index
 # Returns the homepage
 # Try it:
@@ -33,6 +35,13 @@ def get_sign_up():
 @app.route('/list_a_space', methods=['GET'])
 def get_list_a_space():
     return render_template('list_a_space.html')
+
+@app.route('/am_i_logged_in', methods=['GET'])
+def get_am_i_logged_in():
+    connection = get_flask_database_connection(app)
+    repository = UserRepository(connection)
+    user = repository.find(session['user_id'])
+    return render_template('am_i_logged_in.html', user=user)
 
 # -------- SPACES ----------
 
@@ -122,25 +131,13 @@ def submit_login_request():
     entered_email = request.form.get('email_address')
     entered_password = request.form.get('password')
     # getting the user in dictionary format which matches the email from the database
-    # in format {
-    #     "id": 1,
-    #     "title": "Mr",
-    #     "first_name": "John",
-    #     "last_name": "Smith",
-    #     "email_address": "email@testmail.com",
-    #     "password": "Password1",
-    #     "phone_number": '07926345037'
-    # }
     stored_password = repository.find_by_email(entered_email).get('password')
     if entered_password == stored_password:
+        session['user_id'] = repository.find_by_email(entered_email).get('id')
         return redirect("/spaces")
     else:
         return render_template('login.html', invalid_login=True)
-    # user_id = repository.get_id(entered_email) # this will need adding to user repository
-    #     session['user_id'] = user_id
-    #     return redirect(f"/spaces")
-    # else:
-    #     pass
+
 
 # -------- REQUESTS ----------
 # Use this code to retrieve logged in user id --> user_id = session.get('user_id')
