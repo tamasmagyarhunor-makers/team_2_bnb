@@ -33,3 +33,5 @@ class BookingRepository():
             'UPDATE bookings SET space_name = %s,  booking_status = %s,  start_date = %s, end_date = %s, space_id = %s, user_id = %s WHERE id = %s',
             [booking.space_name, booking.booking_status, booking.start_date, booking.end_date, booking.space_id, booking.user_id, booking.id])
         return None
+
+    

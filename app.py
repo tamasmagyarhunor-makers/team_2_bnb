@@ -2,11 +2,14 @@ import os
 from lib.database_connection import get_flask_database_connection
 from lib.space import *
 from lib.space_repository import *
+
+from lib.bookings import *
+from lib.booking_repository import *
+
 from lib.user import *
 from lib.user_repository import *
+
 from flask import Flask, request, render_template, redirect, url_for, session
-
-
 
 # Create a new Flask app
 app = Flask(__name__)
@@ -34,6 +37,40 @@ def get_sign_up():
 def get_list_a_space():
     return render_template('list_a_space.html')
 
+@app.route('/request', methods=['GET'])
+def get_request_availability():
+    return render_template('request.html')
+
+@app.route('/request/<int:space_id>', methods=['GET'])
+def get_request_space(space_id):
+    connection = get_flask_database_connection(app)
+    repository = SpaceRepository(connection)
+    space = repository.find(space_id)
+    return render_template('request.html', space=space)
+
+@app.route('/request', methods=['POST'])
+def check_availaiblity():
+    connection = get_flask_database_connection(app)
+    userID = session.get('user_id')
+    repository = BookingRepository(connection)
+    new_booking = Booking(
+        None,
+        'test name',
+        'Pending',
+        request.form['start_date'],
+        request.form['end_date'],
+        request.form.get('space_id'),
+        userID
+        )
+    new_booking = repository.create(new_booking)
+    sprepository = SpaceRepository(connection)
+    spaces = sprepository.all()
+    return render_template('spaces.html', spaces=spaces)
+
+@app.route('/get-session')
+def get_session():
+    userID = session.get('user_id', '0')
+    return userID
 # -------- SPACES ----------
 
 # Get details of all spaces - GET /space - SELECT * FROM spaces
@@ -141,6 +178,11 @@ def submit_login_request():
     #     return redirect(f"/spaces")
     # else:
     #     pass
+
+@app.route('/request')
+def submit_request():
+    return redirect(f"/request")
+   
 
 # -------- REQUESTS ----------
 # Use this code to retrieve logged in user id --> user_id = session.get('user_id')
