@@ -12,7 +12,7 @@
     <body>
         <h1>Log in to MakersBnB</h1>
         <br>
-        <form action="/login" method="post">
+        <form action="/login/submit" method="post">
             <label for="email_address">Email address:</label>
             <input type="text" id="email_address" name="email_address" required>
         
@@ -22,7 +22,11 @@
             <button>Login</button>
         </form>
    
-         
+        {% if invalid_login %}
+        <div style="color: red;">
+            Invalid login. Please try again.
+        </div>
+        {% endif %}
     
            
 
