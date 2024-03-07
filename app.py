@@ -22,19 +22,31 @@ app.secret_key = 'secret'
 
 @app.route('/index', methods=['GET'])
 def get_index():
-    return render_template('index.html')
+    connection = get_flask_database_connection(app)
+    repository = UserRepository(connection)
+    user = repository.find(session['user_id'])
+    return render_template('index.html', user=user)
 
 @app.route('/login', methods=['GET'])
 def get_login():
-    return render_template('login.html')
+    connection = get_flask_database_connection(app)
+    repository = UserRepository(connection)
+    user = repository.find(session['user_id'])
+    return render_template('login.html', user=user)
 
 @app.route('/sign_up', methods=['GET'])
 def get_sign_up():
-    return render_template('sign_up.html')
+    connection = get_flask_database_connection(app)
+    repository = UserRepository(connection)
+    user = repository.find(session['user_id'])
+    return render_template('sign_up.html', user=user)
 
 @app.route('/list_a_space', methods=['GET'])
 def get_list_a_space():
-    return render_template('list_a_space.html')
+    connection = get_flask_database_connection(app)
+    repository = UserRepository(connection)
+    user = repository.find(session['user_id'])
+    return render_template('list_a_space.html', user=user)
 
 @app.route('/am_i_logged_in', methods=['GET'])
 def get_am_i_logged_in():
@@ -50,8 +62,10 @@ def get_am_i_logged_in():
 def get_all_spaces():
     connection = get_flask_database_connection(app)
     repository = SpaceRepository(connection)
+    repository2 = UserRepository(connection)
+    user = repository2.find(session['user_id'])
     spaces = repository.all()
-    return render_template('spaces.html', spaces=spaces)
+    return render_template('spaces.html', spaces=spaces, user=user)
 
 
 # Get details of a single space - GET /space/<id> - SELECT * FROM spaces WHERE id = <id>
@@ -59,15 +73,20 @@ def get_all_spaces():
 def get_space(space_id):
     connection = get_flask_database_connection(app)
     repository = SpaceRepository(connection)
+    repository2 = UserRepository(connection)
+    user = repository2.find(session['user_id'])
     space = repository.find(space_id)
-    return render_template('show_space.html', space=space)
+    return render_template('show_space.html', space=space, user=user)
 
 
 # GET /spaces/new
 # Returns a form to create a new spaces
 @app.route('/space/new', methods=['GET'])
 def get_new_space():
-    return render_template('list_a_space.html')
+    connection = get_flask_database_connection(app)
+    repository = UserRepository(connection)
+    user = repository.find(session['user_id'])
+    return render_template('list_a_space.html', user=user)
 
 # Create a new space - POST /space - INSERT INTO spaces VALUES ...
 @app.route('/space', methods=['POST'])
@@ -82,7 +101,8 @@ def create_new_space():
         request.form['price'],
         request.form['user_id'])
     new_space = repository.create(new_space)
-    return redirect(f"/space/{space.id}")
+    user = repository.find(session['user_id'])
+    return redirect(f"/space/{space.id}", user=user)
 
 
 # -------- USERS ----------
@@ -92,7 +112,7 @@ def create_new_space():
 @app.route('/user', methods=['GET'])
 def get_all_users():
     connection = get_flask_database_connection(app)
-    repository = user_repo(connection)
+    repository = UserRepository(connection)
     users = repository.all()
     return render_template('users/users.html', user = users)
 
@@ -127,6 +147,7 @@ def submit_login_request():
     # making the connection to the database
     connection = get_flask_database_connection(app)
     repository = UserRepository(connection)
+    user = repository.find(session['user_id'])
     # storing the user's entered credentials in a dictionary
     entered_email = request.form.get('email_address')
     entered_password = request.form.get('password')
@@ -134,9 +155,9 @@ def submit_login_request():
     stored_password = repository.find_by_email(entered_email).get('password')
     if entered_password == stored_password:
         session['user_id'] = repository.find_by_email(entered_email).get('id')
-        return redirect("/spaces")
+        return redirect("/spaces", user=user)
     else:
-        return render_template('login.html', invalid_login=True)
+        return render_template('login.html', invalid_login=True, user=user)
 
 
 # -------- REQUESTS ----------
@@ -149,7 +170,7 @@ def submit_login_request():
 @app.route('/requests/booker/<int:booker_id>', methods=['GET'])
 def get_requests_by_booker(booker_id):
     connection = get_flask_database_connection(app)
-    repository = user_repo(connection)
+    repository = UserRepository(connection)
     booking_requests = repository.find(booker_id)
     return render_template('booking_requests/booking_request.html', booking_requests=booking_request)
 
