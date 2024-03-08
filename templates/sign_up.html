@@ -1,48 +1,110 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>MakersBnB</title>
+<head>
+    <title>MakersBnB</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #1aaf6c;
+            margin-bottom: 20px;
+        }
+        p {
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 15px 30px;
+            background-color: #1aaf6c;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 18px;
+            width: 100%;
+            max-width: 300px;
+            box-sizing: border-box;
+        }
+        button:hover {
+            background-color: #0c7a4b;
+        }
+        /* Style for back button */
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            text-decoration: none;
+            color: #1aaf6c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <a href="/goback" class="back-button">&lt; Back</a>
+    <div class="container">
+    {% if 'user_id' in session %}
+    <p>You are logged in as:</p>
+    <span class="first_name">{{user.first_name}}</span> <span class="last_name">{{user.last_name}}</span>
+    {% endif %}
 
-        <!--
-            Head to https://github.com/makersacademy/web-applications-in-python/blob/main/pills/loading_css_or_static_files.md
-            If you're wondering how the CSS file below is being loaded.
-        -->
-        <link rel="stylesheet" href="/static/style.css" >
-    </head>
-    <body>
-        <div>
-            {% if 'user_id' in session %}
-            <p>You are logged in as:</p>
-            <span class="first_name">{{user.first_name}}</span> <span class="last_name">{{user.last_name}}</span>
-            {% endif %}
-    
-        </div>
-        <h1>Sign up to MakersBnB</h1>
-        <br>
-        <form action="/sign_up/submit" method="post">
-            <label for="title">Title:</label>
-            <input type="text" id="title" name="title" required>
-        
-            <label for="first_name">First name:</label>
-            <input type="first_name" id="first_name" name="first_name" required>
-        
-            <label for="last_name">Last name:</label>
-            <input type="text" id="last_name" name="last_name" required>
+    <h1>Sign up to MakersBnB</h1>
+    <form action="/sign_up/submit" method="post">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required>
 
-            <label for="email">Email:</label>
-            <input type="text" id="email" name="email" required>
+        <label for="first_name">First name:</label>
+        <input type="text" id="first_name" name="first_name" required>
 
-            <label for="phone_number">Phone number:</label>
-            <input type="text" id="phone_number" name="phone_number" required>
+        <label for="last_name">Last name:</label>
+        <input type="text" id="last_name" name="last_name" required>
 
-            <label for="password">Password:</label>
-            <input type="text" id="password" name="password" required>
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" required>
 
-            <br>
-            <br>
-            <button>Sign up</button>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
 
+        <label for="phone_number">Phone number:</label>
+        <input type="text" id="phone_number" name="phone_number" required>
 
-    </body>
+        <button>Sign up</button>
+    </form>
+</div>
+</body>
 </html>
-

@@ -1,33 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>MakersBnB</title>
+<head>
+    <title>MakersBnB - Listings</title>
     <meta charset="utf-8">
-  </head>
-  <body>
-    <div>
-      {% if 'user_id' in session %}
-      <p>You are logged in as: </p>
-      <span class="first_name">{{user.first_name}}</span> <span class="last_name">{{user.last_name}}</span>
-      {% endif %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        h1 {
+            text-align: center;
+            color: #1aaf6c;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 20px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #1aaf6c;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        a:hover {
+            background-color: #0c7a4b;
+        }
+        .t-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1aaf6c;
+            margin-top: 0;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .t-info {
+            color: #555;
+            margin-bottom: 5px;
+        }
+        .t-price {
+            color: #555;
+            font-weight: bold;
+        }
+        /* Style for logout button */
+        .logout-form {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .logout-button {
+            padding: 10px 20px;
+            background-color: #d9534f;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .logout-button:hover {
+            background-color: #c9302c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form action="/logout" method="post" class="logout-form">
+            <button type="submit" class="logout-button">Logout</button>
+        </form>
+        {% if 'user_id' in session %}
+        <p>You are logged in as:</p>
+        <span class="first_name">{{ user.first_name }}</span> <span class="last_name">{{ user.last_name }}</span>
+        {% endif %}
 
-  </div>
-    <h1>Listings</h1>
-    <ul>
-      
-      {% for space in spaces %}
-        <li>
-          
-          <a href="/space/{{space.id}}"><p class="t-name">{{space.name}}</p></a>
-          <p class="t-location">{{space.location}}</p>
-          <p class="t-description">{{space.description}}</p>
-          <p class="t-price">{{space.price}}</p>
-        </li>
-      {% endfor %}
-      
-    </ul>
-    
-    
-    <a href="/space/new">Add a new space</a>
-  </body>
+        <h1>Listings</h1>
+        <ul>
+            {% for space in spaces %}
+            <li>
+                <p class="space-name">{{ space.name }}</p>
+                <p class="t-info">Location: {{ space.location }}</p>
+                <p class="t-info">Description: {{ space.description }}</p>
+                <p class="t-info">Price: £<span class="t-price">{{ space.price }}</span></p>
+                <a href="/space/{{ space.id }}">More details</a>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <a href="/space/new">Add a new space</a>
+    </div>
+</body>
 </html>

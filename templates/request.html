@@ -1,38 +1,84 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>MakersBnB</title>
+<head>
+    <title>MakersBnB - Request Booking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #1aaf6c;
+        }
+        .t-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1aaf6c;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #1aaf6c;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0c7a4b;
+        }
+        a {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: #1aaf6c;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1><p class="t-name">Request Booking for {{ space.name }}</p></h1>
 
-        <!--
-            Head to https://github.com/makersacademy/web-applications-in-python/blob/main/pills/loading_css_or_static_files.md
-            If you're wondering how the CSS file below is being loaded.
-        -->
-        <link rel="stylesheet" href="/static/style.css" >
-    </head>
-    <body>
-        
-        <h1><p class="t-name">Request booking for {{space.name}}</p></h1>
-        <br>
-        <form action="/request" method="post">
-            <input type="hidden" id="space_id" name="space_id" value={{space.id}}>
-            <label for="start_date">Start date:</label>
-            <input type="date" id="start_date" name="start_date" required>
+    <form action="/request" method="post">
+        <input type="hidden" id="space_id" name="space_id" value="{{ space.id }}">
+        <label for="start_date">Start date:</label>
+        <input type="date" id="start_date" name="start_date" required>
 
-            <label for="end_date">End date:</label>
-            <input type="date" id="end_date" name="end_date" required>
+        <label for="end_date">End date:</label>
+        <input type="date" id="end_date" name="end_date" required>
 
-           
+        <button>Send Request</button>
+    </form>
 
-            <br>
-            <br>
-            <button>Send Request</button>
-            <br>
-            <br>
-
-
-            <a href="/spaces">Back to listings</a>
-  </body>
+    <a href="/spaces">Back to Listings</a>
+</div>
+</body>
 </html>
-
-
-   

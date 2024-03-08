@@ -1,33 +1,74 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>MakersBnB</title>
+<head>
+    <title>MakersBnB</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #1aaf6c;
+            margin-bottom: 20px;
+        }
+        p {
+            text-align: center;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        button {
+            padding: 15px 30px;
+            background-color: #1aaf6c;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
+            font-size: 18px;
+            width: 100%;
+            max-width: 300px;
+            box-sizing: border-box;
+        }
+        button:hover {
+            background-color: #0c7a4b;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    {% if 'user_id' in session %}
+    <p>You are logged in as:</p>
+    <span class="first_name">{{user.first_name}}</span> <span class="last_name">{{user.last_name}}</span>
+    {% endif %}
 
-        
-        <link rel="stylesheet" href="/static/style.css" >
-    </head>
-    <body>
-        <div>
-            {% if 'user_id' in session %}
-            <p>You are logged in as:</p>
-            <span class="first_name">{{user.first_name}}</span> <span class="last_name">{{user.last_name}}</span>
-            {% endif %}
-    
-        </div>
-        <h1>Welcome to MakersBnB</h1>
+    <h1>Welcome to MakersBnB</h1>
+    <div class="button-container">
         <a href="/login">
             <button>Login</button>
-        </a>     
-        <br>
-        <br>
-        <br>
-        <br>
+        </a>
         <a href="/sign_up">
             <button>Sign up</button>
-        </a> 
-        
-
-
-    </body>
+        </a>
+    </div>
+</div>
+</body>
 </html>
-

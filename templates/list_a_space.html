@@ -1,59 +1,93 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>MakersBnB</title>
+<head>
+    <title>MakersBnB - List a Space</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            position: relative;
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #1aaf6c;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #1aaf6c;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0c7a4b;
+        }
+        /* Position the logout button */
+        .back-button {
+            position: absolute;
+            top: 10px; /* Adjust top spacing */
+            right: 10px; /* Adjust right spacing */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    {% if 'user_id' in session %}
+    <p>You are logged in as:</p>
+    <span class="first_name">{{ user.first_name }}</span> <span class="last_name">{{ user.last_name }}</span>
+    {% endif %}
 
-        <!--
-            Head to https://github.com/makersacademy/web-applications-in-python/blob/main/pills/loading_css_or_static_files.md
-            If you're wondering how the CSS file below is being loaded.
-        -->
-        <link rel="stylesheet" href="/static/style.css" >
-    </head>
-    <body>
-        <div>
-            {% if 'user_id' in session %}
-            <p>You are logged in as:</p>
-            <span class="first_name">{{user.first_name}}</span> <span class="last_name">{{user.last_name}}</span>
-            {% endif %}
-    
-        </div>
-        <h1>List a space</h1>
+    <!-- Back to Listings button -->
+    <form action="/back_to_listings" method="post" class="back-button">
+        <button type="submit">Back to Listings</button>
+    </form>
+
+    <h1>List a Space</h1>
+    <form action="/list_a_space" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" required>
+
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description" required>
+
+        <label for="price">Price per night:</label>
+        <input type="text" id="price" name="price" required>
+
         <br>
-        <form action="/list_a_space" method="post">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-
-            <label for="location">Location:</label>
-            <input type="text" id="location" name="location" required>
-        
-            <label for="description">Description:</label>
-            <input type="text" id="description" name="description" required>
-
-            <label for="price">Price per night:</label>
-            <input type="text" id="price" name="price" required>
-
-            <!-- <label for="available_from">Available from:</label>
-            <input type="text" id="available_from" name="available_from" required> -->
-
-            <!-- <label for="available_to">Avaialble to:</label>
-            <input type="text" id="available_to" name="available_to" required> -->
-
-            
-
         <br>
-        <br>
-
-        <button id="myButton">List my space</button>
-
-        <script>
-            // Add an event listener to the button
-            document.getElementById('myButton').addEventListener('click', create_space())
-        </script>
-        <!-- <button>List my space</button>     -->
-         
-    
-           
-
-    </body>
+        <button>List my space</button>
+    </form>
+</div>
+</body>
 </html>
-

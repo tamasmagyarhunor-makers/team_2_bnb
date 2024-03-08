@@ -1,33 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>MakersBnB</title>
+<head>
+    <title>MakersBnB - Single Space</title>
     <meta charset="utf-8">
-  </head>
-  <body>
-    <div>
-      {% if 'user_id' in session %}
-      <p>You are logged in as:</p>
-      <span class="first_name">{{user.first_name}}</span> <span class="last_name">{{user.last_name}}</span>
-      {% endif %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #1aaf6c;
+        }
+        .t-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1aaf6c;
+            margin-top: 0; /* Moved the space name to the top */
+            margin-bottom: 10px; /* Added margin below the space name */
+            display: block; /* Made the space name a block element */
+        }
+        .t-info {
+            color: #555;
+            margin-bottom: 5px;
+        }
+        .t-price {
+            color: #555;
+            font-weight: bold;
+        }
+        button {
+            background-color: #1aaf6c;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0c7a4b;
+        }
+        a {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: #1aaf6c;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    {% if 'user_id' in session %}
+    <p>You are logged in as:</p>
+    <span class="first_name">{{ user.first_name }}</span> <span class="last_name">{{ user.last_name }}</span>
+    {% endif %}
 
-  </div>
 
-    <h1>single space</h1>
-    <p class="t-name">{{space.name}}</p>
+    <h1>Single Space</h1>
+    <p class="t-name">{{ space.name }}</p> <!-- Moved the space name to the top -->
 
+    <p class="t-info">Location: {{ space.location }}</p>
+    <p class="t-info">Description: {{ space.description }}</p>
+    <p class="t-info">Price: £<span class="t-price">{{ space.price }}</span></p> <!-- Added £ sign before the price -->
 
-    <p class="t-location">{{space.location}}</p>
-    <p class="t-description">{{space.description}}</p>
-    <p class="t-price">{{space.price}}</p>
-    
-      <a href="/request/{{space.id}}"><button>Request booking</button></a>
-      <p>
-   
+    <a href="/request/{{ space.id }}"><button>Request Booking</button></a>
 
-    <!-- This is a link to another page. -->
-    <!-- The browser will send `GET /books/new` when the user clicks this -->
-    <a href="/spaces">Back to listings</a>
-
-  </body>
+    <a href="/spaces">Back to Listings</a> <!-- Moved the "Back to Listings" link to the bottom -->
+</div>
+</body>
 </html>
