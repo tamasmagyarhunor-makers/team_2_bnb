@@ -40,10 +40,10 @@ def get_login():
     else:
         return render_template('login.html')
     
-# @app.route('/logout')
-# def logout():
-#     session.clear()
-#     return redirect(url_for('index.html'))
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return redirect(f"/index")
 
 @app.route('/sign_up', methods=['GET'])
 def get_sign_up():
@@ -54,6 +54,11 @@ def get_sign_up():
         return render_template('sign_up.html', user=user)
     else:
         return render_template('sign_up.html')
+    
+@app.route('/goback', methods=['GET'])
+def sign_up_back_button():
+    session.clear()
+    return redirect(f"/index")
 
 @app.route('/list_a_space', methods=['GET'])
 def get_list_a_space():
@@ -62,12 +67,10 @@ def get_list_a_space():
     user = repository.find(session['user_id'])
     return render_template('list_a_space.html', user=user)
 
-@app.route('/am_i_logged_in', methods=['GET'])
-def get_am_i_logged_in():
-    connection = get_flask_database_connection(app)
-    repository = UserRepository(connection)
-    user = repository.find(session['user_id'])
-    return render_template('am_i_logged_in.html', user=user)
+@app.route('/back_to_listings', methods=['POST'])
+def back_to_listings():
+    return redirect(f"/spaces")
+
 
 @app.route('/request', methods=['GET'])
 def get_request_availability():
@@ -91,21 +94,27 @@ def get_request_space(space_id):
 @app.route('/request', methods=['POST'])
 def check_availaiblity():
     connection = get_flask_database_connection(app)
+    user_repository = UserRepository(connection)
+    space_repository = SpaceRepository(connection)
+    booking_repository = BookingRepository(connection)
+    user = user_repository.find(session.get('user_id'))
     userID = session.get('user_id')
-    repository = BookingRepository(connection)
+    space_id = request.form.get('space_id')
+    space = space_repository.find(space_id)
+    space_name = space.name if space else "Unknown Space"
     new_booking = Booking(
         None,
-        'test name',
+        space_name,
         'Pending',
         request.form['start_date'],
         request.form['end_date'],
         request.form.get('space_id'),
         userID
         )
-    new_booking = repository.create(new_booking)
-    sprepository = SpaceRepository(connection)
-    spaces = sprepository.all()
-    return render_template('spaces.html', spaces=spaces)
+    new_booking = booking_repository.create(new_booking)
+    
+    spaces = space_repository.all()
+    return render_template('space_successfully_listed.html', spaces=spaces, user=user)
 
 @app.route('/get-session')
 def get_session():
@@ -232,10 +241,10 @@ def create_new_user():
         request.form['first_name'],
         request.form['last_name'],
         request.form['email'],
-        request.form['phone_number'],
-        request.form['password'])
-    new_user = repository.create(new_user)
-    return redirect(f"/user/{user.id}")
+        request.form['password'],
+        request.form['phone_number'])
+    new_user = repository.create(user)
+    return redirect(f"/index")
 
 @app.route('/login/submit', methods=['POST'])
 def submit_login_request():
@@ -243,22 +252,6 @@ def submit_login_request():
     connection = get_flask_database_connection(app)
     repository = UserRepository(connection)
 
-#     # storing the user's entered credentials in a dictionary
-#     entered_email = request.form.get('email_address')
-#     entered_password = request.form.get('password')
-#     stored_password = repository.find_by_email(entered_email).get('password')
-#     if entered_password == stored_password:
-#         session['user_id'] = repository.find_by_email(entered_email).get('id')
-#         return redirect("/spaces")
-#     else:
-#         return render_template('login.html', invalid_login=True)
-#     # user_id = repository.get_id(entered_email) # this will need adding to user repository
-#     #     session['user_id'] = user_id
-#     #     return redirect(f"/spaces")
-#     # else:
-#     #     pass
-
-    # Clearing session (assuming you want to clear the session upon login)
     session.clear()
     
     # Storing the user's entered credentials in a dictionary
